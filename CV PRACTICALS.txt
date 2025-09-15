@@ -1,0 +1,343 @@
+CV PRACTICALS 
+ 
+
+											PRACTICAL 1 - Basic Operations on Image 
+A.	Program to change the Brightness of Image.
+B.	To Flip the image around the vertical and horizontal line.
+C.	Display the color components of the image.
+D.	Display of gray scale images.
+E.	To find the negative of an image.
+
+
+
+I = imread('wallpaper.jpg');
+I1 = I-50 ;
+figure , imshow(I1) ;
+I2 = I+50 ;
+figure , imshow(I2) ;
+j = fliplr(I);
+k = flipud(I);
+figure, imshow(I),title('original image');
+figure, imshow(j),title('horizontal image');
+figure, imshow(k),title('vertical image');
+redChannel = I(:, :, 1);
+greenChannel = I(:, :, 2);
+blueChannel = I(:, :, 3);
+figure, imshow(redChannel) , colormap([[0:1/255:1]', zeros(256,1), zeros(256,1)]), colorbar;
+figure, imshow(greenChannel), colormap([zeros(256,1),[0:1/255:1]', zeros(256,1)]), colorbar;
+figure, imshow(blueChannel),colormap([zeros(256,1), zeros(256,1), [0:1/255:1]']), colorbar;
+a = im2gray(I);
+figure, imshow(a);
+neg=255-I;
+figure, imshow(neg);
+
+
+
+											PRACTICAL 2 -Using histogram for image quality analysis
+
+
+A-Calculate the histogram of a given image
+B-Histogram Equalization
+
+
+i = imread("wallpaper.jpg");
+j = imcomplement(i);
+
+figure;   % ✅ NEW
+subplot(2, 2, 1);
+imhist(i);
+title("Histogram of Original Image");
+subplot(2, 2, 2);
+imhist(j);
+title("Histogram of Complement Image");
+subplot(2, 2, 3);
+imshow(i);
+title("Original Image");
+subplot(2, 2, 4);
+imshow(j);
+title("Complement Image");
+
+originalImage = imread("images.jpeg");
+grayImage = rgb2gray(originalImage);
+equalizedImage = histeq(grayImage); 
+
+figure;   % ✅ NEW
+subplot(2, 2, 1);
+imshow(grayImage);
+title("Original Grayscale Image");
+subplot(2, 2, 2);
+imshow(equalizedImage);
+title("Equalized Image");
+subplot(2, 2, 3);
+imhist(grayImage);
+title("Histogram of Original Image");
+subplot(2, 2, 4);
+imhist(equalizedImage)
+title("Histogram of Equalized Image");
+
+
+
+
+											PRACTICAL 3 -Program for Image Filtering
+A- Low pass filter
+B- High Pass Filter
+
+
+
+originalImage = imread('wallpaper.jpg');
+originalImage = im2double(originalImage);
+originalImage2 = imread('images.jpeg');
+originalImage2 = im2double(originalImage2);
+
+filterSize = 3;
+averageFiltered = imfilter(originalImage, fspecial('average', filterSize));
+figure;
+subplot(1,2,1); imshow(originalImage); title('Original Image (avg)');
+subplot(1,2,2); imshow(averageFiltered); title('Average Filtered Image');
+
+weights = [1 2 1; 2 4 2; 1 2 1] / 16;
+weightedAverageFiltered = imfilter(originalImage, weights);
+figure;
+subplot(1,2,1); imshow(originalImage); title('Original Image (weighted avg)');
+subplot(1,2,2); imshow(weightedAverageFiltered); title('Weighted Average Filtered Image');
+
+grayImage = rgb2gray(originalImage2);
+filterSizeMed = [3, 3];
+medianFiltered = medfilt2(grayImage, filterSizeMed);
+figure;
+subplot(1,2,1); imshow(originalImage2); title('Original Image (median)');
+subplot(1,2,2); imshow(medianFiltered); title('Median Filtered Image');
+
+grayImage = rgb2gray(originalImage2);
+sobelHorizontal = imfilter(double(grayImage), [-1, -2, -1; 0, 0, 0; 1, 2, 1]);
+sobelVertical   = imfilter(double(grayImage), [-1, 0, 1; -2, 0, 2; -1, 0, 1]);
+sobelMagnitude  = sqrt(sobelHorizontal.^2 + sobelVertical.^2);
+figure;
+subplot(1,2,1); imshow(grayImage); title('Original Grayscale (Sobel)');
+subplot(1,2,2); imshow(sobelMagnitude, []); title('Sobel Edge Detection');
+
+laplacianFiltered = double(grayImage) - del2(double(grayImage));
+figure;
+subplot(1,2,1); imshow(grayImage); title('Original Grayscale (Laplacian)');
+subplot(1,2,2); imshow(laplacianFiltered, []); title('Laplacian Edge Detection');
+
+filteredImage = imbilatfilt(originalImage2);
+figure;
+subplot(1,2,1); imshow(originalImage2); title('Original Image (bilateral)');
+subplot(1,2,2); imshow(filteredImage); title('Bilateral Filtered Image');
+
+
+
+											PRACTICAL 4  - Edge Detection with gradient and convolution of an image
+
+
+I = imread('images.jpeg');
+figure;
+subplot(3,2,1); imshow(I); title('original image');
+h = ones(5,5)/25;
+b = imfilter(I,h);
+subplot(3,2,2); imshow(b); title('filtered image');
+g = rgb2gray(b);
+c = edge(g,'sobel');
+subplot(3,2,3); imshow(c); title('sobel operator');
+d = edge(g,'prewitt');
+subplot(3,2,4); imshow(d); title('prewitt operator');
+e = edge(g,'roberts');
+subplot(3,2,5); imshow(e); title('robert operator');
+f = edge(g,'canny');
+subplot(3,2,6); imshow(f); title('canny operator');
+
+
+
+
+											PRACTICAL 5 - Finding Threshold of Images
+A-Program to find threshold of grayscale image 
+B- Program to find threshold of RGB image
+
+
+
+originalImage = imread('wallpaper.jpg');
+grayImage = rgb2gray(originalImage);
+threshold1 = graythresh(grayImage);
+binary1 = imbinarize(grayImage,threshold1);
+rgbImage = originalImage;
+gray2 = rgb2gray(rgbImage);
+threshold2 = graythresh(gray2);
+binary2 = imbinarize(gray2,threshold2);
+figure;
+subplot(2,2,1); imshow(grayImage); title('Original Grayscale Image');
+subplot(2,2,2); imshow(binary1); title('Binary Image (Thresholded)');
+subplot(2,2,3); imshow(rgbImage); title('Original RGB Image');
+subplot(2,2,4); imshow(binary2); title('Binary Image (Thresholded)');
+
+
+
+											PRACTICAL 6 - Program to estimate and subtract the background of an image 
+
+
+originalImage = imread('wallpaper.jpg');
+grayImage = rgb2gray(originalImage);
+threshold = 150;
+binaryMask = grayImage < threshold;
+foregroundMask = ~binaryMask;
+backgroundSubtractedImage = originalImage;
+backgroundSubtractedImage(repmat(foregroundMask,[1,1,3])) = 0;
+figure; 
+subplot(1,2,1); 
+imshow(originalImage); 
+title('Original Image'); 
+subplot(1,2,2); 
+imshow(backgroundSubtractedImage); 
+title('Background-Subtracted Image');
+
+
+											PRACTICAL 7 - Program to convert color image to gray and hsv
+
+
+colorImage = imread('wallpaper.jpg');
+grayImage = rgb2gray(colorImage);
+hsvImage = rgb2hsv(colorImage);
+figure; 
+subplot(1,3,1); 
+imshow(colorImage); 
+title('Original Color Image'); 
+subplot(1,3,2); 
+imshow(grayImage); 
+title('Grayscale Image'); 
+subplot(1,3,3); 
+imshow(hsvImage); 
+title('HSV Color Space');
+
+
+											PRACTICAL 8 - 
+
+A - Determination of edge detection using operators
+
+
+I = imread('images.jpeg');
+grayImage = rgb2gray(I);
+edgeSobel = edge(grayImage,'sobel');
+figure; 
+subplot(1,2,1); 
+imshow(I); 
+title('Original Image'); 
+subplot(1,2,2); 
+imshow(edgeSobel); 
+title('Edge Detection using Sobel Operator');
+
+
+B - 2-D DFT and DCT
+
+
+I = imread('images.jpeg');
+grayImage = rgb2gray(I);
+dftImage = fft2(double(grayImage));
+dctImage = dct2(double(grayImage));
+figure; 
+subplot(1,3,1); 
+imshow(grayImage); 
+title('Original Image'); 
+subplot(1,3,2); 
+imshow(log(abs(fftshift(dftImage))+1),[]); 
+title('2-D DFT'); 
+subplot(1,3,3); 
+imshow(dctImage,[]); 
+title('2-D DCT');
+
+
+C - Filtering in Frequency domain
+
+
+I = imread('images.jpeg');
+grayImage = rgb2gray(I);
+dftImage = fft2(double(grayImage));
+filterSize = 20;
+highPassFilter = ones(size(grayImage));
+highPassFilter(end/2-filterSize:end/2+filterSize,end/2-filterSize:end/2+filterSize) = 0;
+filteredImage = ifft2(dftImage.*highPassFilter);
+figure; 
+subplot(1,2,1); 
+imshow(grayImage); 
+title('Original Image'); 
+subplot(1,2,2); 
+imshow(abs(filteredImage),[]); 
+title('Filtered Image (High-Pass Filter)');
+
+
+
+											PRACTICAL 9 - Display of colour images
+
+
+ I = imread("llama.jpg"); 
+figure;
+subplot(2,2,1); 
+imshow(I); 
+title("original image");
+grayImage = rgb2gray(I); 
+subplot(2,2,2);
+imshow(grayImage); 
+title("grayscale image");
+hsvImage = rgb2hsv(I); 
+subplot(2,2,3); 
+imshow(hsvImage);
+title("HSV image");
+ycbcrImage = rgb2ycbcr(I); 
+subplot(2,2,4); 
+imshow(ycbcrImage); 
+title("YCBCR image");
+
+
+											PRACTICAL 10 - 
+
+A-DWT of Images
+
+
+originalImage = imread('images.jpeg');
+if size(originalImage,3) == 3
+originalImage = rgb2gray(originalImage);
+end
+wavelet = 'db1';
+level = 3;
+[C,S] = wavedec2(originalImage,level,wavelet);
+figure; 
+subplot(2,2,1); 
+imshow(originalImage); 
+title('Original Image');
+for i = 1:level
+Arec = wrcoef2('a',C,S,wavelet,i);
+Hrec = wrcoef2('h',C,S,wavelet,i);
+Vrec = wrcoef2('v',C,S,wavelet,i);
+Drec = wrcoef2('d',C,S,wavelet,i);
+reconstructedImage = Arec + Hrec + Vrec + Drec;
+subplot(2,2,i+1); 
+imshow(uint8(reconstructedImage)); 
+title(['Level ',num2str(i)]);
+end
+
+
+B - Segmentation using watershed transform
+
+
+
+x = imbinarize(rgb2gray(imread('images.jpeg')));
+subplot(1,2,1); 
+imshow(x); 
+title('Original Image');
+a = x; 
+x = ~x;
+ms = bwdist(x);
+ms = 255 - uint8(ms);
+subplot(1,2,2); 
+imshow(ms); 
+title('Image after Distance Transformation');
+hs = watershed(ms);
+ws = hs == 0;
+figure; 
+subplot(1,2,1); 
+imshow(a | ws); 
+title('Watershed Segmentation');
+subplot(1,2,2); 
+imshow(label2rgb(hs)); 
+title('Segments with different color');
+
+
